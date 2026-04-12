@@ -1,0 +1,123 @@
+# Rekap Section – Dasar-Dasar Security Review di Web3
+
+## 1. Dasar-Dasar Smart Contract Audit
+
+> *"A smart contract audit is a time-boxed security review, looking for security vulnerabilities."*
+
+- **Audit ≠ jaminan bebas bug.** Audit adalah tinjauan keamanan dalam jangka waktu tertentu.
+- **Tujuan utama:** Memberi tahu protokol bagaimana menjadi seaman mungkin, bukan memberikan sertifikasi "aman 100%".
+- Istilah yang lebih tepat: **security review** (tinjauan keamanan).
+
+---
+
+## 2. Tiga Fase Utama Security Review
+
+Tidak ada *silver bullet* dalam melakukan security review. Namun secara umum, prosesnya terbagi menjadi tiga fase:
+
+### Fase 1: Initial Review
+| Sub-fase | Deskripsi |
+|----------|-----------|
+| **Scoping** | Memahami lingkup protokol, dependensi, dan gambaran umum kode. |
+| **Reconnaissance** | Menjalankan tools, berinteraksi dengan protokol, mencoba "memecahkan" sistem. |
+| **Vulnerability Identification** | Mengidentifikasi kerentanan, cara eksploitasi, dan mitigasi. |
+| **Reporting** | Menyusun laporan awal berisi temuan dan rekomendasi. |
+
+### Fase 2: Protocol Fixes
+- Tim protokol memperbaiki isu berdasarkan laporan auditor.
+- Melakukan retest dan menambahkan test baru untuk perubahan yang dibuat.
+
+### Fase 3: Mitigation Review
+- Tinjauan ulang fokus pada verifikasi bahwa kerentanan telah diperbaiki.
+- Meliputi: reconnaissance ulang, identifikasi kerentanan sisa, dan pelaporan akhir.
+
+---
+
+## 3. Siklus Pengembangan Smart Contract (Lifecycle)
+
+Keamanan bukanlah satu langkah, melainkan **proses berkelanjutan**.
+
+| Tahap | Aktivitas |
+|-------|-----------|
+| **Plan & Design** | Rencanakan arsitektur, identifikasi asumsi keamanan, tentukan invariant. |
+| **Develop & Test** | Tulis kode, buat test suite, jalankan fuzzing dan static analysis. |
+| **Audit & Post-Deploy Planning** | Lakukan security review, siapkan rencana kontingensi, bug bounty, monitoring. |
+| **Deploy** | Luncurkan ke mainnet setelah semua persiapan matang. |
+| **Monitor & Maintain** | Pantau on-chain activity, respons insiden, lakukan upgrade jika perlu. |
+
+> *"Security shouldn't just be an afterthought or some box you check. You need to have a security mindset from day one."*
+
+**Pesan kunci:** Post-deploy planning (monitoring, bug bounty, disaster recovery) sama pentingnya dengan pengembangan itu sendiri.
+
+---
+
+## 4. Tooling untuk Security Review
+
+Berikut adalah alat-alat yang akan digunakan dan dipelajari lebih lanjut:
+
+### Static Analysis (Analisis Statis)
+| Alat | Deskripsi |
+|------|-----------|
+| [Slither](https://github.com/crytic/slither) | Static analysis framework untuk Solidity. |
+| [Aderyn](https://github.com/Cyfrin/aderyn) | Alat analisis statis modern. |
+
+### Fuzzing / Invariant Tests
+| Alat | Deskripsi |
+|------|-----------|
+| [Foundry Test Suite](https://github.com/foundry-rs/foundry) | Fuzzing stateless dan stateful (invariant test). |
+
+### Formal Verification
+| Alat | Deskripsi |
+|------|-----------|
+| [Certora](https://www.certora.com/) | Platform verifikasi formal komersial. |
+
+### AI Tools
+| Alat | Deskripsi |
+|------|-----------|
+| [ChatGPT](https://chat.openai.com) | LLM untuk bantuan debugging dan edukasi. |
+| [GitHub Co-Pilot](https://github.com/features/copilot) | Asisten coding AI. |
+| [AI Limitations](https://github.com/ZhangZhuoSJTU/Web3Bugs) | Repo contoh bug yang dapat vs tidak dapat dideteksi AI. |
+
+> **Catatan penting:** AI tools saat ini masih terbatas. Sekitar 80% bug (terutama business logic) tidak terdeteksi otomatis.
+
+---
+
+## 5. Audit Readiness: Apakah Protokol Siap?
+
+Sebelum protokol diaudit, sebaiknya tim mengevaluasi kesiapan menggunakan:
+
+| Alat | Deskripsi |
+|------|-----------|
+| [**Rekt Test**](https://blog.trailofbits.com/2023/08/14/can-you-pass-the-rekt-test/) | 12 pertanyaan dari Trail of Bits untuk mengukur kesiapan keamanan. |
+| [**simple-security-toolkit**](https://github.com/nascentxyz/simple-security-toolkit) | Checklist dari nascentxyz untuk audit readiness. |
+
+> Jika protokol tidak bisa menjawab pertanyaan-pertanyaan tersebut, kemungkinan besar **belum siap audit** (apalagi deploy).
+
+---
+
+## 6. Mindset: Attacker vs Defender
+
+> *"We need to always be improving as security researchers and adopt an attacker vs defender mindset."*
+
+### Prinsip yang Harus Dipegang:
+- **Selalu belajar** – Vektor serangan baru muncul terus; yang tidak update akan tertinggal.
+- **Berpikir seperti penyerang** – Sebelum menulis/mereview kode, tanyakan: "Bagaimana saya bisa mengeksploitasi ini?"
+- **Stay informed** – Ikuti laporan keamanan, post-mortem, dan riset terbaru.
+
+### Top Attack Vectors yang Masih Relevan (termasuk Re-entrancy dari 2016!):
+1. Private key theft
+2. Reward manipulation
+3. Price oracle manipulation
+4. Insufficient access controls
+5. Re-entrancy & read-only re-entrancy
+
+---
+
+## Kesimpulan
+
+- Audit adalah **satu lapisan** dari banyak lapisan pertahanan.
+- Keamanan adalah **proses berkelanjutan** – dari desain hingga monitoring pasca-deploy.
+- Gunakan **tools yang tepat** (static analysis, fuzzing, formal verification) tetapi jangan andalkan tools sepenuhnya.
+- Pastikan protokol **siap audit** (Rekt Test, dokumentasi, invariant).
+- Kembangkan **attacker vs defender mindset** dan terus belajar dari kesalahan masa lalu.
+
+> *"Hopefully, with you taking this course we can learn from the mistakes in the past and finally reign in the exploitation in Web3."*
