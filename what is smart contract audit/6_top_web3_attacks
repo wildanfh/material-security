@@ -1,0 +1,131 @@
+# Top Attack Vectors di Web3 dan Mindset Keamanan
+
+## Pendahuluan
+
+Dalam dunia keamanan Web3, kita perlu memiliki **attackers and defenders mindset** – selalu memperluas pengetahuan, terus meningkatkan kemampuan (leveling up). Sepanjang kursus ini, akan diberikan berbagai alat, latihan, dan wawasan untuk memperdalam pemahaman.
+
+---
+
+## Top Attack Vectors (Vektor Serangan Utama) di Web3
+
+Berdasarkan data kerugian tahun 2023, berikut adalah lima vektor serangan teratas yang menyebabkan hilangnya dana dalam jumlah besar.
+
+### 1. Private Keys (Kunci Privat) – Kerugian: $243.000.000
+
+**Masalah:** Kunci privat yang dicuri adalah penyebab terbesar hilangnya dana di Web3.
+
+| Penyebab Umum | Contoh Skenario |
+|---------------|------------------|
+| Phishing | Pengguna tertipu memasukkan seed phrase ke situs palsu. |
+| Malware | Keylogger atau malware yang mencuri file keystore. |
+| Eksposur tidak sengaja | Commit kunci privat ke GitHub, atau berbagi di Discord. |
+| Social engineering | Penyerang berpura-pura sebagai dukungan teknis. |
+
+> **Mitigasi:** Gunakan hardware wallet, multi-sig, dan jangan pernah menyimpan kunci privat di perangkat yang terhubung internet.
+
+### 2. Reward Manipulation (Manipulasi Reward) – Kerugian: $200.000.000
+
+**Masalah:** Manipulasi sistem insentif terdesentralisasi, sering terjadi pada protokol DeFi yang menjanjikan imbalan (yield, staking rewards, airdrops).
+
+| Jenis Manipulasi | Deskripsi |
+|------------------|-----------|
+| Flash loan attack | Meminjam dana besar sementara untuk memanipulasi reward. |
+| Sybil attack | Membuat banyak identitas palsu untuk mengklaim reward. |
+| MEV (Miner Extractable Value) | Validator mengatur ulang transaksi untuk mengekstrak keuntungan. |
+
+> **Mitigasi:** Desain mekanisme reward yang tahan terhadap manipulasi, batasi flash loan, gunakan cap per alamat.
+
+### 3. Price Oracle Manipulation (Manipulasi Oracle Harga) – Kerugian: ~$146.000.000
+
+**Masalah:** Oracle harga yang terpusat atau hanya mengandalkan satu sumber data (single point of failure) sangat rentan.
+
+| Contoh Serangan | Dampak |
+|-----------------|--------|
+| Flash loan + manipulated price | Memanipulasi harga di DEX, lalu meminjam atau likuidasi posisi dengan harga palsu. |
+| Oracle stale data | Oracle tidak memperbarui harga saat terjadi pergerakan pasar cepat. |
+| Centralized oracle compromise | Oracle diambil alih atau dimatikan oleh penyerang. |
+
+> **Mitigasi:** Gunakan multiple oracles (Chainlink, TWAP Uniswap, dll), implementasikan circuit breaker, dan batas slippage.
+
+### 4. Insufficient Access Controls (Kontrol Akses Tidak Memadai) – Kerugian: $17.000.000
+
+**Masalah:** Fungsi kritis (seperti withdraw, upgrade, mint) tidak dilindungi dengan baik.
+
+| Kesalahan Umum | Contoh |
+|----------------|--------|
+| `onlyOwner` tanpa multi-sig | Satu kunci privat (owner) bisa menghancurkan protokol. |
+| Tidak ada timelock | Owner bisa langsung mengubah parameter kritis tanpa pemberitahuan. |
+| Role yang terlalu luas | Banyak akun memiliki hak istimewa yang berlebihan. |
+| Access control lupa | Fungsi `withdraw` tanpa `onlyOwner` atau `onlyRole`. |
+
+> **Mitigasi:** Gunakan multi-sig untuk owner, implementasikan timelock, dan terapkan prinsip least privilege.
+
+### 5. Re-entrancy (dan Read-Only Re-entrancy) – Kerugian: $20.500.000 (gabungan)
+
+**Masalah:** Fungsi eksternal dapat dipanggil ulang sebelum fungsi pertama selesai (state belum diperbarui), menyebabkan penarikan berulang.
+
+#### Re-entrancy Klasik
+
+```solidity
+// RENTAN: update state setelah transfer
+function withdraw() public {
+    uint256 amount = balances[msg.sender];
+    (bool success, ) = msg.sender.call{value: amount}("");
+    balances[msg.sender] = 0;  // Terlambat!
+}
+```
+
+#### Read-Only Re-entrancy
+
+- Terjadi ketika kontrak lain membaca state sementara yang belum diperbarui.
+- Serangan pada Curve (2023) dan beberapa protokol lainnya.
+
+> **Mitigasi:** Gunakan pola **Checks-Effects-Interactions** (update state terlebih dahulu sebelum transfer eksternal), atau gunakan reentrancy guard (OpenZeppelin).
+
+---
+
+## Total Kerugian dan Pelajaran
+
+Jutaan dolar lagi hilang melalui berbagai vektor serangan lain yang sebenarnya **dapat dicegah** dengan pengetahuan dan praktik yang tepat.
+
+> *"Education is half the battle"* – Edukasi adalah setengah dari pertempuran. Sebagian besar serangan terjadi karena kurangnya kesadaran atau penerapan praktik keamanan dasar.
+
+---
+
+## Mindset: Keamanan sebagai Permainan Catur
+
+> *"Cybersecurity isn't about the systems or the codes; it's about maintaining a mindset. A mindset akin to an endless game of chess, predicting the opponent's moves and always staying a step ahead."*
+
+### Prinsip Mindset yang Harus Dimiliki:
+
+| Prinsip | Penjelasan |
+|---------|------------|
+| **Selalu berpikir seperti penyerang** | Sebelum menulis kode, pikirkan: "Bagaimana saya bisa mengeksploitasi ini?" |
+| **Terus belajar** | Vektor serangan baru muncul setiap hari. Ikuti perkembangan. |
+| **Jangan pernah berasumsi** | Asumsi keamanan yang salah adalah akar banyak kerentanan. |
+| **Lapisan pertahanan (defense in depth)** | Jangan andalkan satu mekanisme keamanan. |
+| **Prediksi langkah lawan** | Dalam audit, coba pikirkan skenario terburuk yang mungkin tidak terpikirkan. |
+
+---
+
+## Latihan dan Pembelajaran Berkelanjutan
+
+Dalam rangkaian security audits yang akan datang, Anda akan mendapatkan latihan praktis dalam:
+
+- **Data analysis** – Menganalisis transaksi on-chain untuk mendeteksi anomali.
+- **Metode enkripsi** – Memahami kriptografi dasar yang digunakan di Web3.
+- **Penanganan script mencurigakan** – Reverse engineering dan analisis malware.
+- **Melawan berbagai ancaman siber** – Simulasi serangan dan pertahanan.
+
+> Tujuannya: menstimulasi pertumbuhan intelektual dan menanamkan konsep esensial ke dalam pola pikir teknisi-strategis.
+
+---
+
+## Kesimpulan
+
+- Lima vektor serangan utama di Web3 (2023): Private keys, Reward manipulation, Oracle manipulation, Access controls, Re-entrancy.
+- Total kerugian mencapai ratusan juta dolar – sebagian besar dapat dicegah dengan edukasi dan praktik keamanan yang baik.
+- Keamanan bukan hanya tentang tools dan kode, tetapi **mindset** – selalu waspada, selalu belajar, dan selalu berpikir seperti penyerang.
+- Latihan berkelanjutan adalah kunci untuk menguasai keamanan smart contract.
+
+> *"Always remember, my friends - Cybersecurity isn't about the systems or the codes; it's about maintaining a mindset."*
