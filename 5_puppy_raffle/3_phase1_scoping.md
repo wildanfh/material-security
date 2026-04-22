@@ -1,5 +1,4 @@
-```markdown
-# Ringkasan Materi: Puppy Raffle – Fase Scoping
+# Puppy Raffle – Fase Scoping
 
 ## Pendahuluan
 
