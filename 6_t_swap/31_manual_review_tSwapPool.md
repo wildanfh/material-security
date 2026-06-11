@@ -126,5 +126,3 @@ require(wethToken != address(0), "Invalid weth token");
 ## Kesimpulan
 
 Bagian awal `TSwapPool.sol` relatif bersih, dengan beberapa catatan informational dan satu kerentanan high yang sudah ditemukan melalui fuzzing (transfer ekstra). Constructor kurang zero-address check – perbaikan mudah. Penggunaan `SafeERC20` adalah nilai plus.
-
-> *"I'm getting hungry for bugs."*
